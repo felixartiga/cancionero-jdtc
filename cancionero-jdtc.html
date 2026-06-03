@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cancionero JDTC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e0e10;--bg2:#17171a;--bg3:#1f1f23;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);--text:#f0ede8;--text2:#9b9890;--text3:#6b6865;--gold:#c9a84c;--gold2:#e8c97a;--radius:10px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;font-size:14px}
+
+#login{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;text-align:center}
+.login-cross{font-size:48px;margin-bottom:1.5rem;opacity:.6;color:var(--gold)}
+.login-title{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:500;color:var(--text);margin-bottom:.25rem;letter-spacing:.02em}
+.login-sub{font-size:13px;color:var(--text3);margin-bottom:2.5rem;letter-spacing:.06em;text-transform:uppercase}
+.login-box{background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--radius);padding:2rem;width:100%;max-width:320px}
+.login-box input{width:100%;padding:10px 14px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;letter-spacing:.2em;margin-bottom:1rem;text-align:center}
+.login-box input:focus{outline:none;border-color:var(--gold)}
+.login-box input::placeholder{letter-spacing:.05em;color:var(--text3)}
+.login-btn{width:100%;padding:10px;background:var(--gold);border:none;border-radius:8px;color:#1a1400;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer}
+.login-btn:hover{background:var(--gold2)}
+.login-err{font-size:12px;color:#e07070;margin-top:.75rem;display:none}
+
+#app{display:none;min-height:100vh}
+.topnav{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.25rem;border-bottom:0.5px solid var(--border);background:var(--bg)}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;color:var(--gold);letter-spacing:.04em}
+.nav-back{background:none;border:0.5px solid var(--border2);border-radius:6px;color:var(--text2);font-size:12px;padding:5px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;display:none}
+.nav-back:hover{color:var(--text)}
+.nav-mode{font-size:11px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase}
+
+#screen-home{padding:2rem 1.25rem}
+.home-intro{margin-bottom:2rem}
+.home-intro h2{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:400;color:var(--text);margin-bottom:.25rem}
+.home-intro p{font-size:13px;color:var(--text3)}
+.mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.mode-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.75rem 1.25rem;cursor:pointer;text-align:center;transition:border-color .2s,background .2s}
+.mode-card:hover{border-color:var(--gold);background:var(--bg3)}
+.mode-icon{font-size:30px;margin-bottom:.75rem;color:var(--gold);opacity:.8}
+.mode-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;color:var(--text);margin-bottom:4px}
+.mode-desc{font-size:12px;color:var(--text3);line-height:1.5}
+
+#screen-free{display:none;padding:1.25rem}
+.two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem}
+@media(max-width:600px){.two-col{grid-template-columns:1fr}}
+.col-title{font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:.75rem}
+.search-wrap{position:relative;margin-bottom:.75rem}
+.search-wrap input{width:100%;padding:8px 12px 8px 32px;background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px}
+.search-wrap input:focus{outline:none;border-color:var(--gold)}
+.search-wrap input::placeholder{color:var(--text3)}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px}
+.slist{display:flex;flex-direction:column;gap:4px;max-height:52vh;overflow-y:auto;padding-right:2px}
+.slist::-webkit-scrollbar{width:3px}
+.slist::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.srow{display:flex;align-items:center;gap:8px;padding:7px 10px;border:0.5px solid var(--border);border-radius:8px;background:var(--bg2);cursor:pointer;transition:border-color .15s}
+.srow:hover{border-color:var(--border2)}
+.srow.on{border-color:var(--gold);background:rgba(201,168,76,.07)}
+.chk{width:15px;height:15px;border:0.5px solid var(--border2);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;color:var(--bg)}
+.chk.on{background:var(--gold);border-color:var(--gold)}
+.rtitle{font-size:13px;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rkey{font-size:10px;color:var(--text3);background:var(--bg3);padding:2px 6px;border-radius:4px;flex-shrink:0}
+.sellist{display:flex;flex-direction:column;gap:4px;max-height:52vh;overflow-y:auto}
+.selitem{display:flex;align-items:center;gap:6px;padding:7px 10px;border:0.5px solid var(--border);border-radius:8px;background:var(--bg2)}
+.selnum{font-size:11px;color:var(--text3);min-width:16px;text-align:right}
+.seltitle{font-size:13px;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.selkey{font-size:10px;color:var(--text3)}
+.smb{background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px;padding:0 2px;line-height:1;font-family:'DM Sans',sans-serif}
+.smb:hover{color:var(--text)}
+.empty-msg{font-size:13px;color:var(--text3);padding:.5rem 0;font-style:italic}
+.abar{display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap}
+.btn{padding:8px 16px;border-radius:8px;border:0.5px solid var(--border2);background:transparent;cursor:pointer;font-size:13px;color:var(--text2);font-family:'DM Sans',sans-serif;transition:background .15s,color .15s}
+.btn:hover{background:var(--bg3);color:var(--text)}
+.btn-gold{background:var(--gold);border-color:var(--gold);color:#1a1400;font-weight:500}
+.btn-gold:hover{background:var(--gold2);color:#1a1400}
+
+.sheet-wrap{margin-top:1.5rem;border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.sheet-header{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.25rem;border-bottom:0.5px solid var(--border);background:var(--bg2);flex-wrap:wrap;gap:8px}
+.sheet-header-title{font-size:13px;font-weight:500;color:var(--text)}
+.sheet-actions{display:flex;gap:6px;flex-wrap:wrap}
+.ssong{padding:1.5rem 1.25rem;border-bottom:0.5px solid var(--border)}
+.ssong:last-child{border-bottom:none}
+.ssong-num{font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.ssong-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500;color:var(--text);margin-bottom:2px}
+.ssong-key{font-size:11px;color:var(--gold);margin-bottom:.75rem;letter-spacing:.04em}
+.ssong-lyrics{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text2);white-space:pre-wrap;line-height:1.85}
+
+#screen-misa{display:none;padding:1.25rem}
+.misa-grid{display:flex;flex-direction:column;gap:5px;margin-bottom:1rem}
+.mrow{display:flex;align-items:center;gap:8px;padding:8px 12px;border:0.5px solid var(--border);border-radius:8px;background:var(--bg2)}
+.mlbl{font-size:11px;font-weight:500;color:var(--text3);min-width:130px;letter-spacing:.03em}
+.msong{font-size:13px;color:var(--text);flex:1}
+.msong.empty{color:var(--text3);font-style:italic}
+.mpick{background:none;border:0.5px solid var(--border);border-radius:6px;cursor:pointer;font-size:11px;padding:4px 10px;color:var(--text3);font-family:'DM Sans',sans-serif}
+.mpick:hover{border-color:var(--gold);color:var(--gold)}
+.picker-overlay{background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--radius);padding:1rem;margin-top:.5rem;margin-bottom:.5rem}
+.picker-list{display:flex;flex-direction:column;gap:2px;max-height:200px;overflow-y:auto}
+.pitem{padding:7px 10px;border-radius:6px;cursor:pointer;font-size:13px;color:var(--text);display:flex;justify-content:space-between;align-items:center}
+.pitem:hover{background:var(--bg3)}
+.pitem-key{font-size:11px;color:var(--text3)}
+
+/* PDF print styles */
+@media print{
+  body{background:#fff!important;color:#000!important}
+  #login,#app>.topnav,#screen-home,#screen-free .two-col,#screen-free .abar,#screen-misa .misa-grid,#screen-misa>div:not(#misasheet),#mpicker,.sheet-header{display:none!important}
+  .sheet-wrap{border:none!important;margin:0!important}
+  .ssong{padding:1.2rem 0!important;border-bottom:1px solid #ddd!important;page-break-inside:avoid}
+  .ssong-num{color:#888!important;font-size:10px}
+  .ssong-title{color:#000!important;font-size:1.3rem}
+  .ssong-key{color:#555!important}
+  .ssong-lyrics{color:#333!important;font-size:11px}
+  .sheet-wrap{display:block!important}
+  #sheetarea,#misasheet{display:block!important}
+}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <div class="login-cross">✝</div>
+  <h1 class="login-title">Cancionero JDTC</h1>
+  <p class="login-sub">Acceso para el equipo</p>
+  <div class="login-box">
+    <input type="password" id="pwd" placeholder="Contraseña" onkeydown="if(event.key==='Enter')tryLogin()">
+    <button class="login-btn" onclick="tryLogin()">Entrar</button>
+    <p class="login-err" id="login-err">Contraseña incorrecta</p>
+  </div>
+</div>
+
+<div id="app">
+  <nav class="topnav">
+    <span class="nav-brand">✝ JDTC</span>
+    <span class="nav-mode" id="nav-mode"></span>
+    <button class="nav-back" id="nav-back" onclick="goHome()">← Inicio</button>
+  </nav>
+
+  <div id="screen-home">
+    <div class="home-intro">
+      <h2>¿Qué van a preparar?</h2>
+      <p>Selecciona el tipo de celebración</p>
+    </div>
+    <div class="mode-grid">
+      <div class="mode-card" onclick="startMode('misa')">
+        <div class="mode-icon">⛪</div>
+        <div class="mode-name">Misa</div>
+        <div class="mode-desc">Asigna cantos por momento litúrgico</div>
+      </div>
+      <div class="mode-card" onclick="startMode('horasanta')">
+        <div class="mode-icon">🕯</div>
+        <div class="mode-name">Hora Santa</div>
+        <div class="mode-desc">Elige y ordena cantos para la hora santa</div>
+      </div>
+      <div class="mode-card" onclick="startMode('adoracion')">
+        <div class="mode-icon">🙌</div>
+        <div class="mode-name">Adoración</div>
+        <div class="mode-desc">Elige y ordena cantos para adoración</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-free">
+    <div class="two-col">
+      <div>
+        <p class="col-title">Cantos disponibles</p>
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="fsearch" placeholder="Buscar canto..." oninput="renderFL()">
+        </div>
+        <div class="slist" id="flist"></div>
+      </div>
+      <div>
+        <p class="col-title">Seleccionados <span id="fcount" style="opacity:.6"></span></p>
+        <div class="sellist" id="fsel"></div>
+      </div>
+    </div>
+    <div class="abar">
+      <button class="btn btn-gold" id="sheetbtn" onclick="buildSheet()" style="display:none">📄 Ver hoja de cantos</button>
+      <button class="btn" id="clearbtn" onclick="clearSel()" style="display:none">Limpiar</button>
+    </div>
+    <div id="sheetarea"></div>
+  </div>
+
+  <div id="screen-misa">
+    <div class="misa-grid" id="mgrid"></div>
+    <div id="mpicker" style="display:none"></div>
+    <div class="abar">
+      <button class="btn btn-gold" onclick="buildMisaSheet()">📄 Ver hoja completa</button>
+      <button class="btn" onclick="clearMisa()">Limpiar</button>
+    </div>
+    <div id="misasheet"></div>
+  </div>
+</div>
+
+<script>
+const PWD='sma123';
+
+const S=[
+  {t:"Ven Espíritu Ven",k:"C",l:"C  G  Am  G  F  G\nVen Espíritu, ven y lléname, Señor con tu preciosa unción\n\nC  G  Am  G  F  G\nPurifícame y lávame, renuévame, restáurame, Señor Con tu poder\n\nC  G  Am  G  F  G  C\nPurifícame y lávame, renuévame Restáurame, Señor te quiero conocer"},
+  {t:"Océanos",k:"Bm",l:"Bm  A  D  A  G\nTu voz me llama a las aguas Donde mis pies pueden fallar\n\nBm  A  D  A  G\nAhí te encuentro lo incierto caminaré sobre el mar.\n\nG  D  A  G  D  A\nA tu nombre clamaré en ti mis ojos fijaré\n\nG  D  A  G\nEn tempestad descansaré en tu poder pues tuyo soy\n\nBm - D - A - G\nHasta el final.\n\nBm  A\nQue tu espíritu me guíe sin fronteras más allá de las barreras\nEm  G\nA donde tú me llames."},
+  {t:"Way Maker",k:"D",l:"D  A  E  F#m\nAquí estás te vemos mover te adorare te adorare\n\nD  A  E  F#m\nAquí estás obrando en mi te adorare te adorare\n\nD\nMilagroso abres camino\nA\nCumples promesas Luz en tinieblas\nE  F#m\nMi Dios así eres tu\n\nD  A  E  F#m\nAsí eres tú así eres tú así eres tú así eres tú\n\nD\nAunque no pueda ver estas obrando\nE\nSiempre estas, siempre estas obrando"},
+  {t:"Sumérgeme",k:"C",l:"C  G\nCansado del camino sediento de ti\nAm  F  G\nUn desierto he cruzado sin fuerzas he quedado vengo a ti\n\nC  G  Am\nLuché como soldado y a veces sufrí y aunque la lucha he ganado\nF  G\nMi armadura he desgastado vengo a ti\n\nC  G\nSumérgeme en el río de tu Espíritu\nF  Dm  G\nNecesito refrescar este seco corazón sediento de ti\nC\nSumérgeme"},
+  {t:"Digno de Alabar",k:"A",l:"A  F#m\nLevanto mis manos cierro mis ojos,\nD  E  A\nPara proclamar tu nombre, Dios de poder.\n\nD  E  F#m - E  A\nDigno de alabar, señor Gloria y majestad, sean a ti\nD  E  F#m - E  A\nRey de la creación, Por siempre Amén"},
+  {t:"El Espíritu de Dios Está en Este Lugar",k:"D",l:"D  G  D\nEl Espíritu de Dios está en este lugar\nD  G  A\nEl Espíritu de Dios se mueve en este lugar\n\nD  G\nEstá aquí para consolar\nD  G\nEstá aquí para liberar\nA  D  D7\nEl Espíritu de Dios está aquí\n\nG  A  Bm\nMuévete en mí, muévete en mi\nG  A\nToma mi mente y mi corazón\nF#m  Bm\nLlena mi vida de tu amor\nG  A  D  D7\nMuévete en mí, Dios Espíritu, muévete en mi"},
+  {t:"Me Llamaste",k:"A",l:"A  E  F#m\nTe fijaste en mí, siendo yo un pecador\nD  A\nMe escogiste para ser un portador de tu amor\nE  F#m\nComo me iba a negar a abrirte mi corazón\n\nBm  A - E\nNo siendo un merecedor\nBm  A - E\nMe cogiste con tus brazos de amor\n\nA  E  F#m\nMe llamaste para ser uno de tus hijos Dios"},
+  {t:"Perfume a Tus Pies",k:"D",l:"D  A  Bm  A  D\nCuando pienso en tu amor Y en tu fidelidad No puedo hacer más Que postrarme y adorar\n\nD  A  Bm\nYo quiero enamorarme más de ti Enséñame a amarte y a vivir\nA  G  A  D\nConforme a tu justicia y tu verdad Con mi vida quiero adorar\nA  Bm\nCon todo lo que tengo y lo que soy Todo lo que he sido te lo doy\nA  G  A  D\nQue mi vida sea para ti Como un perfume a tus pies"},
+  {t:"¿Qué Sería de Mí?",k:"G",l:"G  D  C\n¿Qué sería de mí si no me hubieras alcanzado?,\nG  D  C\n¿Dónde estaría hoy si no me hubieras perdonado?,\nG  D  Em  C\nTendría un vacío en mi corazón, vagaría sin rumbo, sin dirección.\n\nAm  Em  D\nSería como un pájaro herido que se muere en el suelo,\nC  D  G\nSi no fuera por tu gracia y por tu amor"},
+  {t:"Jesucristo Basta",k:"G",l:"Em  C  G  Em  C  G\nNuestros corazones, insaciables son\nEm  C  G  D\nHasta que conocen a su Salvador\n\nG  D  Em  C  G\nÉl es el agua que al beber nunca más tendremos sed\nD  Em  C  G\nJesucristo basta Jesucristo basta\nD  Em  C  G\nMi castigo recibió y su herencia me entregó"},
+  {t:"Digno",k:"A",l:"A  F#m\nNo tengo nada para ofrecer, nada que te pueda sorprender\nD  F#m  E\nSolo un corazón, quebrantado una y otra vez\n\nA  F#m\nY no hay nada que me enamore más, nada que me apasione más\nD  A  E\nSolo tu presencia, solo tu mirada me hace suspirar\n\nD  Dm  A  E\nMe inclino ante ti, rey que perdona multitud de errores\n\nA  F#m\nDigno eternamente Digno\nE  D\nImpresionante y digno solo ante ti yo me inclino"},
+  {t:"No Hay Lugar Más Alto",k:"A",l:"A  E  F#m  D\nA tus pies arde mi corazón a tus pies entrego lo que soy\n\nD  E\nMe perdonaste, me acercaste a tu presencia\nF#m  E\nMe levantaste, hoy me postro a adorarte\n\nD  E\nNo hay lugar más alto, más grande\nF#m  A\nQue estar a tus pies, que estar a tus pies"},
+  {t:"Levanto Mis Manos",k:"D",l:"D  G  A  D\nLevanto mis manos, aunque no tenga fuerzas.\nBm  G  A  D  D7\nLevanto mis manos, aunque tenga mil problemas.\n\nG  A\nCuando levanto mis manos comienzo a sentir\nD  A  Bm\nuna unción que me hace cantar.\n\nG  A\nCuando levanto mis manos mis cargas se van\nD  A  Bm\nnuevas fuerzas Tú me das."},
+  {t:"Rosa Fiel",k:"G",l:"G  C\nCúbreme, con tu manto santo cúbreme\nD\nQue estoy ciego y no puedo ver\nEm\nQue esta noche se me hace larga\n\nG  C\nMadre no, no me dejes caer\nEm\nDe tu mano sé que llegaré al otro lado\nC\ndonde me espera tu hijo amado\nAm  C\nY ahí a sus pies yo descansaré\nD\nContigo mi rosa fiel"},
+  {t:"Vine a Adorarte",k:"D",l:"D  A  Em  G  D  A  G\nTú eres la luz que brillo en las tinieblas abrió mis ojos pude ver\n\nD  A  Bm  G\nVine adorarte vine a postrarme vine a decir que eres mi Dios\nD  A  Bm  G\nSolo tú eres grande solo tú eres digno eres asombroso para mi"},
+  {t:"Tú Estás Aquí",k:"E",l:"E  C#m  A  E\nAunque mis ojos no te puedan ver, te puedo sentir Sé que estás aquí.\n\nC#m  A\nMi corazón, puede sentir tu presencia,\nE  B\nTú estás aquí, Tú estás aquí\nC#m  A\nPuedo sentir, tu majestad\nE  B\nTú estás aquí, Tú estás aquí"},
+  {t:"Entra en la Presencia",k:"G",l:"G  Bm  C  D\nEntra en la presencia del señor con gratitud adórale de corazón\nG  Bm  C  D\nEntra en la presencia del señor con gratitud alza tu voz con júbilo\n\nC  B7  Em  Am  D  G  C  D  G\nDa gloria y honra y alabanza Al señor Cristo nombre sin igual"},
+  {t:"Poderoso Dios",k:"C",l:"C  Am\nAl que está sentado en el trono\nF  G\nY al cordero, sea el honor\nC  Am\nSea la gloria, sea la honra\nF  G\nSea el dominio por los siglos de los siglos...\n\nC\nPoderoso Dios\nAm\nPoderoso Dios\nF\nPoderoso Dios\nG\nMi alma clama por ti..."},
+  {t:"Nadie Te Ama Como Yo",k:"C",l:"C  G  Am  F  Dm  G\nPues nadie te ama como yo, pues nadie te ama, como yo,\nC  G  Am  F  Dm  G\nMira la cruz, esa es mi más grande prueba, nadie te ama como yo."},
+  {t:"La Cruz",k:"D",l:"D  A  Bm  G\nTú, Rey Salvador me diste vida me diste amor\n\nG  Bm  D  A\nCómo fue que yo sin darte nada me amaste a mí me viste a mí\n\nG  Bm  D  A\nLa cruz habla de amor de cómo el Salvador dio todo por un pecador\nG  Bm  D  A\nLa cruz su sangre enmarcó El Rey su vida entregó y salvación al mundo dio"},
+  {t:"Paz en la Tormenta",k:"D",l:"D  G  D  G  A\nCuando lloras por las veces que intentaste Y tratas de olvidar\n\nD  G  D  G  A\nPuedes tener paz en la tormenta Fe y esperanza, cuando no puedas seguir"},
+  {t:"Cuán Grande Es Dios",k:"C",l:"C  G/B  Am\nEl esplendor de un Rey, vestido en Majestad\nF  G\nLa Tierra alegre está\n\nC\nCuán Grande es Dios\nG/B  Am\nCántale, Cuán grande es Dios\nF\nY todos lo verán\nG  C\nCuán grande es Dios"},
+  {t:"Huellas",k:"C",l:"C  G\nUna noche soñé que caminaba con el Señor\nAm  Em\ny en el cielo yo vi las escenas de mi vida\n\nC  Am  F  G\nHijo, yo te amo y jamás te he dejado solo recuérdalo\nC  Am  F  G  C\nen los momentos de prueba entonces era yo quien te cargo"},
+  {t:"Te Entrego",k:"G",l:"G  C  G  D\nHaz lo que quieras conmigo haz lo que quieras de mi\nC  Em  Am  D\nhoy yo te ofrezco mi vida hoy yo me rindo ante ti\n\nG  D  Em\nTe entrego todo lo que soy todo lo que tengo\nBm  C  Am  D\ntodo lo que quiero y todo lo que sueño a ti Señor Jesús"},
+  {t:"Jesús Vengo a Ti",k:"G",l:"G  D\nTu gracia quiero en mí\nG  D\nqué más puedo pedir\nBm  G\nJesús vengo a Ti, Jesús vengo a Ti\n\nG  Bm\nHoy me levantaré\nD  A\nCielos se abren sobre mí\nG  Bm\nTu nombre exaltaré\nD  A\nGloria eterna te daré"},
+  {t:"Espíritu Santo",k:"Em",l:"Em\nEspíritu de Dios\nG  D\nEspíritu Santo\n\nD  Em  G\nMi alma tiene sed de ti\nA\nMi alma tiene sed\n\nD  G  A\nEspíritu Santo ven a arder\nD  G  A\nDerrama tu fuego y tu poder\nBm\nActúa en mi\nG\nActúa en mi\nA\nActúa en mi"},
+  {t:"Hay una Unción Aquí",k:"G",l:"G  C  D\nHay una unción aquí\nBm  Em\nCayendo sobre mí\nC\nLlenándome\nD  G\nSaciando mi ser\n\nC  D  Bm  Em\nEspíritu Santo te necesito\nAm  D  G\nManda tu fuego a este lugar"},
+  {t:"Siempre Te Amaré",k:"C",l:"C  G\nTe conozco desde antes que nacieras\nAm  F\nse tu historia, conozco tus problemas\n\nC  G\nTe amo, no importa lo que hagas\nAm  F\nTe amo, no importa donde vayas\n\nAm  G  F  G\nNunca temas, siempre estaré\nAm  G  F  G\ny en mi mano yo te sostendré"},
+  {t:"Carta de Amor",k:"C",l:"C  Am\nMe conoces en lo secreto\nFmaj7  C\nMe viste antes de nacer\n\nC  G\nEsa cruz, tu carta de amor\nAm\nPara este pecador\nF\nEres tan bueno Dios"},
+  {t:"La Niña de Tus Ojos",k:"C",l:"C  G  Am  F\nMe viste a mi cuando nadie me vio, me amaste a mi cuando nadie me amo\nC  G  Am  F\nY me diste nombre yo soy tu niña, la niña de tus ojos porque me amaste a mí"},
+  {t:"Te Necesito",k:"G",l:"G  C\nTe necesito Es que no hay nadie\nD  G\nQuien pueda secar mis lágrimas\n\nG  C\nTe necesito Dios\nG  C\nTe necesito Dios"},
+  {t:"Baja la Unción",k:"G",l:"G  Cadd9  G\nBaja baja baja, baja la unción,\nCadd9  D/F#  Em7\nFluye fluye fluye, una vez más en mi corazón,\nG  D/F#  Cadd9\nDe tu presencia no me quiero alejar."},
+  {t:"Búscale",k:"C",l:"C\nSi tu sientes que tu vida\nEm\nYa no tiene razón de ser\nF  G\nSi te sientes cansado de vivir\n\nF  G  C  Am\nBúscale, encuéntrale\nF  G\nY tu vida entera cambiará"},
+  {t:"Quema Mi Vida",k:"G",l:"G  C  G  D\nQuiero alabarte y no puedo quiero levantar mis manos hacia ti\n\nG  C\nQuema mi vida quema mi ser saca de mi lo que ya no te agrada\nAm  D  G  C\nhazme de nuevo tuyo quiero ser quema mi vida quema mi ser"},
+  {t:"Dios Está Aquí",k:"D",l:"D\nMi amado descendió\nA  E  Bm\nSe quedó conmigo para siempre\n\nBm  D\nÉl está aquí, mi amado\nA  E\nÉl está aquí, nunca lo dejare ir\n\nBm  D\nDios está aquí\nA  E\nSu dulce presencia está aquí"},
+  {t:"Dios de lo Imposible",k:"Am (capo 1)",l:"Am  F\nJesucristo, reinas con poder\nC  G\nSoberano, victorioso Rey\n\nC\nDios de lo imposible\nG\nTe adoramos\nC\nEres invencible\nG\nSoberano\nF  G  Am - G\nTuya es toda la gloria"},
+  {t:"Supremo Amor",k:"E",l:"E  G#m  A  B7  E\nHoy me toca definir, lo que hiciste al cambiar mi corazón.\n\nE\nSupremo amor, que me alcanza y me sostiene.\nC#m\nSupremo amor, que me arrastra, que me mueve.\nA\nSupremo amor, que me sana y fortalece.\nB7\nSupremo amor, el de hoy mañana y siempre."},
+  {t:"Me Rindo",k:"E (capo 4)",l:"E  B  C#m  A\nVengo ante ti con mi dolor sin fuerzas sin voz\n\nE  B  C#m  A\nQuiero lavar tus pies con mi llanto con mi llanto\n\nE  B  C#m  A\nMe rindo me rindo me rindo me rindo a ti Señor"},
+  {t:"Mi Todo",k:"E",l:"E\nSeñor Dios\nF#m\nMi todo\nG#m\nMaestro\nA  B7\nTe adoraré\n\nG#m  C#7\nSeñor yo nada soy\nF#m7  B\nEn ti me esconderé"},
+  {t:"Hasta la Locura",k:"G",l:"G  C\nMe puede faltar todo en la vida\nD  G\nMe puede faltar hasta la vida\n\nC  D\nHasta la locura te amo, Señor\nG  D  Em\nYa no quedan dudas en mi corazón\nC  D  G\nDe que te amo, de que te amo, Señor"},
+  {t:"Construiré Mi Vida",k:"G",l:"G  C\nDigno de recibir toda adoración\nG/B  C\nDigno de recibir hoy esta canción\n\nC  D  Em7  G/B\nConstruiré mi vida en tu amor ahí estoy seguro\nC  D  Em7  G/B\nMi confianza está en ti señor y no seré movido"},
+  {t:"Tu Amor No Se Rinde",k:"G",l:"G  Cadd9\nTu amor no se rinde\nEm  Cadd9\nTu amor no se rinde\n\nCadd9  Em\nMe llevarás, llevarás\nG  D\nEn tus brazos Dios\nCadd9  Em\nMe cubrirás, cubrirás\nG  D\nCon tu eterno amor"},
+  {t:"La Mano de Dios",k:"C",l:"C\nHay una mano que conmigo está\nDsus2/B\nCuando no tengo fuerzas\n\nG\nEs la que me sostiene cuando voy a caer\nEm7\nEs la que a mí me mueve para obrar con poder\nC  D  G\nMe mueve la mano de Dios"},
+  {t:"Resucitados",k:"Em (capo 7)",l:"Em  C\nEnséñame a abrazar\nG  D\nMi cruz, Señor\n\nEm  C\nQuiero ser, ser lavado\nG  D\nSer curado, y quiero Morir a mí mismo\n\nResucitado, resucitado\nResucitado, resucitado"},
+  {t:"Manda la Lluvia",k:"E",l:"E  G#m7\nManda la lluvia de tu presencia\nC#m  Bsus2\nEstoy sediento mi alma se seca\n\nAsus2  E\nPorque yo necesito más, necesito más\nAsus2  Bmsus2\nNecesito más, de ti en mi vida\n\nAsus2  E\nOh Señor te necesito\nAsus2\nMás que el aire\nBmsus2\nQue yo respiro"},
+  {t:"Santo Espíritu Ven",k:"C",l:"C  G\nSanto espíritu ven, Santo espíritu ven a mi\nAm  F\nSanto espíritu ven, a mi\n\nC  G  Am  F\nVen espíritu santo, ven a llenar mi corazón, enciende en él el fuego de tu amor"},
+  {t:"Tarde de Amor",k:"A",l:"A  E\nAl calvario Él llegó, y el dolor aumentó,\nEm  Bm\ncuando un clavo sus manos sin piedad traspasó,\n\nA  E  A\nFue una tarde de amor,\nA  E  F#m\nuna tarde de dolor,\nD\npor mi culpa Jesús\nBm  E\ntuvo que padecer en la Cruz"},
+  {t:"Perdóname Jesús",k:"G",l:"G  D\nDe rodillas Señor, vengo a pedir perdón\nEm  C  G\nQuisiera ayudarte un momento\n\nC  D\nPerdóname Jesús,\nG  D  Em  D\nson mis pecados los que pagaste en aquella cruz"},
+  {t:"Un Apóstol Más",k:"G",l:"G  Am\nYa no quiero más volver\nC  D\nA las cosas que dejé\n\nEm\nSeñor yo quiero darte\nAm\nTodo lo que tengo en mi\n\nC  D\nComo un apóstol mas\nBm  Em\nQue hoy se viene arrodillar"},
+  {t:"Ante Ti",k:"G",l:"G  D  Em\nDe mi corazón nacen las palabras,\nC  D  G\npara decirte hoy, Señor\n\nC  D  G  Em\nAnte ti Señor, postro mi corazón\nC  D  G  Em\nUtilízame en tu obra oh Dios"},
+  {t:"Jesús Está Aquí",k:"G",l:"G\nJesús está aquí\nBm  Em\nMirándote a los ojos\nC - D  G\nDiciéndote \"Te Amo\"\n\nEm  C\nY yo quiero alabarte mi Señor\nD  Em  C\nY yo quiero adorarte solo a ti\nD  G\nJesús tu eres mi Dios"},
+  {t:"Espíritu de Dios Llena Mi Ser",k:"G",l:"G  Em\nEspíritu de Dios llena mi ser\nAm  C  D\nLléname de tu santo poder.\n\nG  Bm\nLléname, lléname\nC  Am  D\ny que haga maravillas en tu nombre.\n\nG  Em  Am  C  D\nLléname, lléname de ti."},
+  {t:"Huracán",k:"G (capo 5)",l:"G  D  Em  C\nMe he hecho tantas preguntas intentando entender\n\nG  D  Em  C  G\nY un huracán romperá el cielo desde mi garganta gritándote\nD  C\n¿dónde estás cuando me haces falta?\n\nG  D  Em  C\nEstoy aquí, en el silencio estoy aquí, en este viento estoy aquí"},
+  {t:"Qué Bien Se Está Aquí",k:"A",l:"A  D  Bm  E\nQué bien se está aquí, en tu presencia glorioso por siempre Señor\n\nD  A\nCuán hermoso eres, Señor\nD  A  E  F#m\nCon todo, mi corazón, te adoro Señor"},
+  {t:"Si Conocieras",k:"C",l:"C  E\nSi conocieras como te amo, si conocieras como te amo\nF  G\nDejarías de vivir sin amor\n\nAm  Em  F  G  C\nSi conocieras como te amo, como te amo serías más feliz."},
+  {t:"Quiero Volver",k:"—",l:"Quise buscar un mundo sin ti me fui lejos\nY recorrí las calles de un triste universo\n\nQuiero volver hacia ti\nMi mirada otra vez\nLlena todo mi ser\nSe mi fuerza mi fe"},
+  {t:"Jesús Eucaristía",k:"G",l:"G  C\nAunque pase por las turbias aguas\nG  C\nY me sienta débil o en soledad\n\nC  G\nYo creo en ti, Jesús Eucaristía\nC  G\nLa inmensidad presente en el altar"},
+  {t:"Estoy Aquí",k:"C",l:"C\nEstoy aquí,\nG\nPara ser amado y amar\nF  Dm  G\nMirar tus ojos y dejarme enamorar\n\nC - G  Am\nY amar por quien que no te ama\nF - Dm  G\nY adorar por quien no te adora"},
+  {t:"En Medio del Fuego",k:"Em (capo 4)",l:"Em  C  G  D\nAlzo la voz, en medio del fuego, De pie en el dolor, sin miedo te espero\n\nEm  C\nCielos, ejércitos, luz y tinieblas la noche y el día\nG\nEl Sol, las estrellas, cantad\nD\nBendecid al Señor"},
+  {t:"Tú, el Único Rey",k:"G",l:"G  G/F#  Em  C  D  G\nTú, el Único Rey que tiene que reinar, el Único Señor al que voy a alabar\n\nC  D  G  D  Em\nQue alabarte a Ti, Señor, Sea siempre lo primero\nC  D\nFijo mi mirada en el cielo"},
+  {t:"Los Coros del Universo",k:"Am",l:"Am  Fmaj7\nLos coros del universo te aclaman a Ti, a ti para siempre.\n\nF  G\nGrandes y maravillosas, Son todas tus obras."},
+  {t:"Si Hubiera Estado Allí",k:"G",l:"G  D/F#  Em\nSi hubiera estado allí entre la multitud\nD  C  D\nque tu muerte pidió que te crucificó\n\nG  D/F#  Em\npensándolo más bien también yo estaba allí\nD  C  D\nyo fui el que te escupió y tu costado hirió"}
+];
+
+const MOMENTOS=["Entrada","Señor ten piedad","Gloria","Salmo responsorial","Aleluya","Ofertorio","Santo","Cordero de Dios","Comunión","Final"];
+let sel=[],masig={},pMom='';
+MOMENTOS.forEach(m=>masig[m]=null);
+
+function tryLogin(){
+  if(document.getElementById('pwd').value===PWD){
+    document.getElementById('login').style.display='none';
+    document.getElementById('app').style.display='block';
+  } else {
+    document.getElementById('login-err').style.display='block';
+    document.getElementById('pwd').value='';
+  }
+}
+
+function goHome(){
+  document.getElementById('screen-home').style.display='block';
+  document.getElementById('screen-free').style.display='none';
+  document.getElementById('screen-misa').style.display='none';
+  document.getElementById('nav-back').style.display='none';
+  document.getElementById('nav-mode').textContent='';
+  sel=[];MOMENTOS.forEach(m=>masig[m]=null);
+}
+
+function startMode(mode){
+  document.getElementById('screen-home').style.display='none';
+  document.getElementById('nav-back').style.display='block';
+  if(mode==='misa'){
+    document.getElementById('screen-misa').style.display='block';
+    document.getElementById('nav-mode').textContent='Misa';
+    renderM();
+  } else {
+    document.getElementById('screen-free').style.display='block';
+    document.getElementById('nav-mode').textContent=mode==='horasanta'?'Hora Santa':'Adoración';
+    sel=[];
+    document.getElementById('fsearch').value='';
+    document.getElementById('sheetarea').innerHTML='';
+    renderFL();renderFS();
+  }
+}
+
+function renderFL(){
+  const q=(document.getElementById('fsearch').value||'').toLowerCase();
+  document.getElementById('flist').innerHTML=S.filter(s=>s.t.toLowerCase().includes(q)).map(s=>{
+    const i=S.indexOf(s),on=sel.includes(i);
+    return `<div class="srow${on?' on':''}" onclick="tog(${i})">
+      <div class="chk${on?' on':''}">${on?'✓':''}</div>
+      <span class="rtitle">${s.t}</span>
+      <span class="rkey">${s.k}</span>
+    </div>`;
+  }).join('');
+}
+
+function tog(i){
+  const p=sel.indexOf(i);
+  if(p===-1)sel.push(i);else sel.splice(p,1);
+  document.getElementById('sheetarea').innerHTML='';
+  renderFL();renderFS();
+}
+
+function renderFS(){
+  const n=sel.length;
+  document.getElementById('fcount').textContent=n>0?`(${n})`:'';
+  document.getElementById('sheetbtn').style.display=n>0?'':'none';
+  document.getElementById('clearbtn').style.display=n>0?'':'none';
+  const el=document.getElementById('fsel');
+  if(n===0){el.innerHTML='<p class="empty-msg">Selecciona cantos de la lista</p>';return;}
+  el.innerHTML=sel.map((idx,i)=>{
+    const s=S[idx];
+    return `<div class="selitem">
+      <span class="selnum">${i+1}</span>
+      <span class="seltitle">${s.t}</span>
+      <span class="selkey">${s.k}</span>
+      <button class="smb" onclick="mUp(${i})">↑</button>
+      <button class="smb" onclick="mDn(${i})">↓</button>
+      <button class="smb" onclick="rmv(${i})">×</button>
+    </div>`;
+  }).join('');
+}
+
+function mUp(i){if(i>0){[sel[i-1],sel[i]]=[sel[i],sel[i-1]];renderFS();document.getElementById('sheetarea').innerHTML='';}}
+function mDn(i){if(i<sel.length-1){[sel[i+1],sel[i]]=[sel[i],sel[i+1]];renderFS();document.getElementById('sheetarea').innerHTML='';}}
+function rmv(i){sel.splice(i,1);renderFL();renderFS();document.getElementById('sheetarea').innerHTML='';}
+function clearSel(){sel=[];renderFL();renderFS();document.getElementById('sheetarea').innerHTML='';}
+
+function buildSheetHTML(songs,mode){
+  return songs.map((s,i)=>`<div class="ssong">
+    <div class="ssong-num">${mode==='misa'?s.momento:`Canto ${i+1} de ${songs.length}`}</div>
+    <div class="ssong-title">${s.t}</div>
+    <div class="ssong-key">Tonalidad: ${s.k}</div>
+    <div class="ssong-lyrics">${s.l}</div>
+  </div>`).join('');
+}
+
+function buildTxt(songs,titulo){
+  return titulo+'\n'+'═'.repeat(44)+'\n\n'+songs.map((s,i)=>{
+    const label=s.momento?s.momento.toUpperCase():`CANTO ${i+1}`;
+    return `${'─'.repeat(44)}\n${label}: ${s.t.toUpperCase()}\nTonalidad: ${s.k}\n${'─'.repeat(44)}\n${s.l}`;
+  }).join('\n\n');
+}
+
+function makeActions(songs,titulo){
+  return `<div class="sheet-actions">
+    <button class="btn" onclick="downloadTxt(${JSON.stringify(titulo)})">⬇ Descargar .txt</button>
+    <button class="btn" onclick="doPrint()">🖨 Guardar PDF</button>
+    <button class="btn" onclick="doCopy(${JSON.stringify(titulo)})">📋 Copiar texto</button>
+  </div>`;
+}
+
+let _currentTxt='';
+
+function buildSheet(){
+  if(sel.length===0)return;
+  const songs=sel.map(idx=>S[idx]);
+  const titulo='CANCIONERO JDTC — '+document.getElementById('nav-mode').textContent.toUpperCase();
+  _currentTxt=buildTxt(songs,titulo);
+  document.getElementById('sheetarea').innerHTML=`<div class="sheet-wrap">
+    <div class="sheet-header">
+      <span class="sheet-header-title">Hoja de cantos</span>
+      ${makeActions(songs,titulo)}
+    </div>
+    ${buildSheetHTML(songs,'free')}
+  </div>`;
+}
+
+function buildMisaSheet(){
+  const assigned=MOMENTOS.filter(m=>masig[m]!==null);
+  if(assigned.length===0){
+    document.getElementById('misasheet').innerHTML='<p style="color:var(--text3);font-size:13px;padding:1rem 0;text-align:center">Aún no hay cantos asignados</p>';
+    return;
+  }
+  const songs=assigned.map(m=>({...S[masig[m]],momento:m}));
+  const titulo='ESQUEMA DE MISA — JDTC';
+  _currentTxt=buildTxt(songs,titulo);
+  document.getElementById('misasheet').innerHTML=`<div class="sheet-wrap">
+    <div class="sheet-header">
+      <span class="sheet-header-title">Hoja de misa</span>
+      ${makeActions(songs,titulo)}
+    </div>
+    ${buildSheetHTML(songs,'misa')}
+  </div>`;
+}
+
+function downloadTxt(titulo){
+  const blob=new Blob([_currentTxt],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='cantos-jdtc.txt';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function doPrint(){
+  window.print();
+}
+
+function doCopy(titulo){
+  navigator.clipboard.writeText(_currentTxt).catch(()=>{});
+}
+
+function renderM(){
+  document.getElementById('mgrid').innerHTML=MOMENTOS.map(m=>{
+    const si=masig[m],s=si!==null?S[si]:null;
+    return `<div class="mrow">
+      <span class="mlbl">${m}</span>
+      <span class="msong${s?'':' empty'}">${s?s.t+' — '+s.k:'sin asignar'}</span>
+      ${s?`<button class="mpick" onclick="clrM('${m}')">×</button>`:''}
+      <button class="mpick" onclick="opP('${m}')">${s?'Cambiar':'Elegir'}</button>
+    </div>`;
+  }).join('');
+}
+
+function opP(m){
+  pMom=m;
+  const pk=document.getElementById('mpicker');
+  pk.style.display='block';
+  pk.innerHTML=`<div class="picker-overlay">
+    <p style="font-size:11px;color:var(--text3);margin-bottom:.5rem;letter-spacing:.05em;text-transform:uppercase">Asignar a: ${m}</p>
+    <div class="search-wrap" style="margin-bottom:.5rem">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="psearch" placeholder="Buscar canto..." oninput="renderPL()">
+    </div>
+    <div class="picker-list" id="plist"></div>
+    <button class="btn" style="margin-top:.5rem;width:100%" onclick="clsP()">Cancelar</button>
+  </div>`;
+  renderPL();
+}
+
+function clsP(){document.getElementById('mpicker').style.display='none';}
+
+function renderPL(){
+  const q=(document.getElementById('psearch').value||'').toLowerCase();
+  document.getElementById('plist').innerHTML=S.filter(s=>s.t.toLowerCase().includes(q)).map(s=>{
+    const i=S.indexOf(s);
+    return `<div class="pitem" onclick="asgn(${i})"><span>${s.t}</span><span class="pitem-key">${s.k}</span></div>`;
+  }).join('');
+}
+
+function asgn(i){masig[pMom]=i;clsP();renderM();document.getElementById('misasheet').innerHTML='';}
+function clrM(m){masig[m]=null;renderM();document.getElementById('misasheet').innerHTML='';}
+function clearMisa(){MOMENTOS.forEach(m=>masig[m]=null);renderM();document.getElementById('misasheet').innerHTML='';}
+</script>
+</body>
+</html>
