@@ -84,6 +84,10 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .ssong-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500;color:var(--text);margin-bottom:2px}
 .ssong-key{font-size:11px;color:var(--gold);margin-bottom:.75rem;letter-spacing:.04em}
 .ssong-lyrics{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text2);white-space:pre-wrap;line-height:1.85}
+#loading{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;text-align:center}
+.loading-spinner{font-size:48px;margin-bottom:1.5rem;opacity:.6;color:var(--gold);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:.9}}
+.loading-text{font-size:13px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase}
 
 #screen-misa{display:none;padding:1.25rem}
 .misa-grid{display:flex;flex-direction:column;gap:5px;margin-bottom:1rem}
@@ -125,6 +129,11 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
     <button class="login-btn" onclick="tryLogin()">Entrar</button>
     <p class="login-err" id="login-err">Contraseña incorrecta</p>
   </div>
+</div>
+
+<div id="loading">
+  <div class="loading-spinner">✝</div>
+  <p class="loading-text">Cargando cantos...</p>
 </div>
 
 <div id="app">
@@ -193,8 +202,23 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 
 <script>
 const PWD='sma123';
+const SCRIPT_URL='PEGAR_URL_AQUI';
 
-const S=[
+let S=[];
+let _songsReady=false;
+let _pendingApp=false;
+
+fetch(SCRIPT_URL,{redirect:'follow'})
+  .then(r=>r.json())
+  .then(data=>{if(Array.isArray(data))S=data;_songsReady=true;if(_pendingApp)showApp();})
+  .catch(()=>{_songsReady=true;if(_pendingApp)showApp();});
+
+function showApp(){
+  document.getElementById('loading').style.display='none';
+  document.getElementById('app').style.display='block';
+}
+
+const _LEGACY=[
   {t:"Ven Espíritu Ven",k:"C",l:"C  G  Am  G  F  G\nVen Espíritu, ven y lléname, Señor con tu preciosa unción\n\nC  G  Am  G  F  G\nPurifícame y lávame, renuévame, restáurame, Señor Con tu poder\n\nC  G  Am  G  F  G  C\nPurifícame y lávame, renuévame Restáurame, Señor te quiero conocer"},
   {t:"Océanos",k:"Bm",l:"Bm  A  D  A  G\nTu voz me llama a las aguas Donde mis pies pueden fallar\n\nBm  A  D  A  G\nAhí te encuentro lo incierto caminaré sobre el mar.\n\nG  D  A  G  D  A\nA tu nombre clamaré en ti mis ojos fijaré\n\nG  D  A  G\nEn tempestad descansaré en tu poder pues tuyo soy\n\nBm - D - A - G\nHasta el final.\n\nBm  A\nQue tu espíritu me guíe sin fronteras más allá de las barreras\nEm  G\nA donde tú me llames."},
   {t:"Way Maker",k:"D",l:"D  A  E  F#m\nAquí estás te vemos mover te adorare te adorare\n\nD  A  E  F#m\nAquí estás obrando en mi te adorare te adorare\n\nD\nMilagroso abres camino\nA\nCumples promesas Luz en tinieblas\nE  F#m\nMi Dios así eres tu\n\nD  A  E  F#m\nAsí eres tú así eres tú así eres tú así eres tú\n\nD\nAunque no pueda ver estas obrando\nE\nSiempre estas, siempre estas obrando"},
@@ -266,7 +290,8 @@ MOMENTOS.forEach(m=>masig[m]=null);
 function tryLogin(){
   if(document.getElementById('pwd').value===PWD){
     document.getElementById('login').style.display='none';
-    document.getElementById('app').style.display='block';
+    if(_songsReady){showApp();}
+    else{document.getElementById('loading').style.display='flex';_pendingApp=true;}
   } else {
     document.getElementById('login-err').style.display='block';
     document.getElementById('pwd').value='';
