@@ -112,7 +112,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
   .ssong-num{color:#888!important;font-size:10px}
   .ssong-title{color:#000!important;font-size:1.3rem}
   .ssong-key{color:#555!important}
-  .ssong-lyrics{color:#333!important;font-size:11px}.ssong-lyrics.two-col{columns:2;column-gap:1.5rem}
+  .ssong-lyrics{color:#333!important;font-size:11px}.ssong-lyrics.lyrics-2col{columns:2;column-gap:1.5rem}
   .sheet-wrap{display:block!important}
   #sheetarea,#misasheet{display:block!important}
 }
@@ -374,7 +374,7 @@ function buildSheetHTML(songs,mode){
     <div class="ssong-num">${mode==='misa'?s.momento:`Canto ${i+1} de ${songs.length}`}</div>
     <div class="ssong-title">${s.t}</div>
     <div class="ssong-key">Tonalidad: ${s.k}</div>
-    <div class="ssong-lyrics${s.l.split('\n').length>25?' two-col':''}">${s.l}</div>
+    <div class="ssong-lyrics${s.l.split('\n').length>25?' lyrics-2col':''}">${s.l}</div>
   </div>`).join('');
 }
 
