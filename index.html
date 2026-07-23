@@ -233,8 +233,8 @@ let _pendingApp=false;
 
 fetch(SCRIPT_URL,{redirect:'follow'})
   .then(r=>r.json())
-  .then(data=>{if(Array.isArray(data))S=data;_songsReady=true;if(_pendingApp)showApp();})
-  .catch(()=>{_songsReady=true;if(_pendingApp)showApp();});
+  .then(data=>{S=(Array.isArray(data)&&data.length)?data:_LEGACY;MISA_BANK=S.concat(MISA_ONLY);_songsReady=true;if(_pendingApp)showApp();})
+  .catch(()=>{S=_LEGACY;MISA_BANK=S.concat(MISA_ONLY);_songsReady=true;if(_pendingApp)showApp();});
 
 function showApp(){
   document.getElementById('loading').style.display='none';
@@ -306,8 +306,41 @@ const _LEGACY=[
   {t:"Si Hubiera Estado Allí",k:"G",l:"G  D/F#  Em\nSi hubiera estado allí entre la multitud\nD  C  D\nque tu muerte pidió que te crucificó\n\nG  D/F#  Em\npensándolo más bien también yo estaba allí\nD  C  D\nyo fui el que te escupió y tu costado hirió"}
 ];
 
+const MISA_ONLY=[
+  {t:"Que Alegría Cuando Me Dijeron",k:"D",momento:"Entrada",l:"D\nQue alegría cuando me dijeron\n\nE A\nVamos a la casa del señor\n\nD G\nYa que están pisando nuestros pies\n\nEm A D\n¡Tus puertas Jerusalén!\n\nD G\nJerusalén está fundada\n\nEm A\nComo ciudad bien compacta;\n\nD G\nAllá suben las tribus,\n\nEm A D\nLas tribus del señor."},
+  {t:"Venimos Hoy a Tu Altar",k:"E",momento:"Entrada",l:"E G#m A B7\nVenimos hoy a tu altar a cantarte Señor\n\nA E B7 E E7\nPues tú eres la alegría de nuestro corazón\n\nA E B7 E\nPues tú eres la alegría de nuestro corazón\n\nE G#m A\nTú hiciste los cielos, los llenas de estrellas,\n\nF#m B7\nde luz y calor\n\nE G#m A F#m\nTú pintaste la aurora, hiciste las nubes, las\n\nB7\npuestas del sol."},
+  {t:"Caminaré",k:"Am",momento:"Entrada",l:"Am D F E Am\nCaminaré, en presencia del señor\n\nAm G\nAmo al Señor porque escucha\n\nAm\nMi voz suplicante.\n\nAm G C\nPorque inclina su oído hacia mí\n\nDm E\nel día que lo invoco."},
+  {t:"Ven Con Nosotros a Caminar",k:"D",momento:"Entrada",l:"D G D\nMientras recorres la vida\n\nA A7 D D7\ntú nunca sólo estás,\n\nG Em D Bm Em A7 D D7\ncontigo por el camino Santa María va.\n\nG D\nVen con nosotros al caminar,\n\nA A7 D D7\nSanta María, ven. (bis)\n\nD G D\nAunque te digan algunos\n\nA A7 D D7\nque nada puede cambiar,\n\nG Em D Bm\nlucha por un mundo nuevo,\n\nEm A7 D D7\nlucha por la verdad."},
+  {t:"Vamos a Adorar al Niño (Navidad)",k:"C",momento:"Entrada",l:"C G F C\n1. En Belén nos ha nacido un Niñito sin igual:\n\nF C\nes el Rey del universo,\n\nDm G\nDios y hombre de verdad.\n\nF C\nVAMOS CON LOS REYES MAGOS\n\nG C C7\nA ADORAR AL NIÑO DIOS,\n\nF G Em Am\nCON CANTARES DE ALEGRÍA,\n\nDm G C C7\nDE HUMILDAD Y DE AMOR. (2)"},
+  {t:"Hoy el Señor Resucitó (Pascua)",k:"D",momento:"Entrada",l:"D\nHoy el Señor resucitó\n\nA\ny de la muerte nos salvó.\n\nD D7 G Gm\nAlegría y paz hermanos,\n\nD A D\nQue el señor resucitó.\n\nD\nPor que espero, Dios le libró\n\nA\ny de la muerte nos salvó.\n\nD D7 G Gm\nAlegría y paz hermanos,\n\nD A D\nQue el señor resucitó."},
+  {t:"Campana Sobre Campana (Navidad)",k:"G",momento:"Entrada",l:"G D\nCampana sobre campana\n\nG\nY sobre campana una\n\nD\nAsómate a la ventana\n\nG\nVerás el niño en la cuna\n\n[Estribillo]\nG C G\nBelén, campanas de Belén\n\nC G\nQue los ángeles tocan\n\nD G\n¿Qué nuevas me traéis?\n\n[Segunda parte]\nG\nRecogido tu rebaño\n\nA D G\n¿A dónde vas, pastorcito?\n\nVoy a llevar al portal\n\nA D G\nRequesón, manteca y vino"},
+  {t:"Arrepiéntete (Cuaresma)",k:"G",momento:"Entrada",l:"G D Em D\nSomos polvo y al polvo volveremos,\n\nC Am D D7\nsomos barro modelado por tus manos, oh mi Dios,\n\nG Bm7 Em D\nsomos criatura frágil que sin ti no vive,\n\nC G Am D7\nhaznos nuevos con tu amor, purifícanos, Señor.\n\nG Em C D\n«Arrepiéntete y cree en el Evangelio\n\nG Em C D\n—nos dijiste tú—, por amor al Reino.»\n\nG Em C D\n«Arrepiéntete y cree en el Evangelio,\n\nAm Em D C G\nabre un camino recto para el Señor.»\n\nG D Em D\nCompasivo y misericordioso\n\nC Am D D7\nEres, Señor, que nos llamas a volverte el corazón,\n\nG Bm7 Em D\nte compadeces de nuestra desgracia, tu perdón es grande;\n\nC G Am D7\nrecíbenos aquí, Señor, danos tu bendición.\n\nG D Em D\nEs ahora el tiempo favorable,\n\nC Am D D7\nHoy es el día de la salvación.\n\nG Bm7 Em D\nNos escuchaste y nos socorriste, Señor y Dios nuestro.\n\nC G Am D7\nNo retires tu perdón, ¡gracias por tu inmenso amor!"},
+  {t:"Señor Ten Piedad I",k:"Am",momento:"Señor ten piedad",l:"Am E Am\nSeñor, ten piedad de nosotros\n\nAm E Am\nSeñor, ten piedad de nosotros\n\nDm G C - F\nDe nosotros señor ten piedad,\n\nDm G Am\nDe nosotros señor ten piedad\n\nAm E Am\nCristo, ten piedad de nosotros\n\nAm E Am\nCristo, ten piedad de nosotros\n\nDm G C - F\nDe nosotros señor ten piedad,\n\nDm G Am\nDe nosotros señor ten piedad\n\nAm E Am\nSeñor, ten piedad de nosotros\n\nAm E Am\nSeñor, ten piedad de nosotros\n\nDm G C - F\nDe nosotros señor ten piedad,\n\nDm G Am\nDe nosotros señor ten piedad"},
+  {t:"Señor Ten Piedad II",k:"G",momento:"Señor ten piedad",l:"G Em A7\nSeñor ten piedad de nosotros\n\nC Am7 D\nSeñor Jesucristo, ten piedad\n\nG B7 Em A7 C\nSeñor ten piedad de nosotros, oh señor\n\nD G\nde nosotros ten piedad\n\nG Em A7\nCristo ten piedad de nosotros\n\nC Am7 D\nSeñor Jesucristo, ten piedad\n\nG B7 Em A7 C\nCristo ten piedad de nosotros, oh señor\n\nD G\nde nosotros ten piedad\n\nG Em A7\nSeñor ten piedad de nosotros\n\nC Am7 D\nSeñor Jesucristo, ten piedad\n\nG B7 Em A7 C\nSeñor ten piedad de nosotros, oh señor\n\nD G\nde nosotros ten piedad"},
+  {t:"Gloria al Señor que Reina en el Cielo",k:"G",momento:"Gloria",l:"G - D - G D G\nGloria al señor que reina en el cielo\n\nC D G - Em C D G\nY en la tierra paz a los hombres que ama él\n\nG - D - G D G\nSeñor te alabamos señor te bendecimos\n\nC D G - Em C D G\nTodos te adoramos gracias por tu gloria\n\nG - D - G D G\nTu eres el cordero que quitas el pecado\n\nC D G - Em C D G\nTen piedad de nosotros y escucha nuestra oración\n\nG - D - G D G\nTu solo eres santo tu solo el altísimo\n\nC D G - Em C D G\nCon el Espíritu Santo en la gloria de Dios padre.\n\nG - D - G D G\nGloria al señor que reina en el cielo\n\nC D G - Em C D G\nY en la tierra paz a los hombres que ama él"},
+  {t:"Aleluya (Busca Primero el Reino de Dios)",k:"C",momento:"Aleluya",l:"C G Am Em F C G C\nAleluya, Alelu, Aleluya, Aleluya, Aleluya.\n\nC G Am Em\nBusca primero el Reino de Dios\n\nF C G C\nY su justicia divina,\n\nC G Am Em F C G C\nÉl te dará las demás cosas. ¡Aleluya! ¡Aleluya!\n\nC G Am Em F C G C\nAleluya, Alelu, Aleluya, Aleluya, Aleluya."},
+  {t:"El Señor Resucitó, Aleluya (Pascua)",k:"C",momento:"Aleluya",l:"C F C\nEl Señor resucitó, Aleluya\n\nC Dm Am G C\nNo hay tristeza ni temor, Aleluya\n\nC F C\nEl Señor resucitó, Aleluya\n\nC Dm Am G C\nde la muerte nos libró. ¡Aleluya!"},
+  {t:"En Su Mesa Hay Amor",k:"A",momento:"Ofertorio",l:"A D A\nEl Señor nos ha reunido junto a Él\n\nA D E7\nEl Señor nos ha invitado a estar con Él\n\nF#m C#m\nEn su mesa hay amor\n\nD A\nLa promesa del perdón\n\nBm E7 A\nY en el vino y pan, su corazón\n\nF#m C#m\nEn su mesa hay amor\n\nD A\nLa promesa del perdón\n\nBm E7 A\nY en el vino y pan, su corazón\n\nA D E7\nCuando, señor, tu voz\n\nA\nLlega en silencio a mí\n\nD E7 A\nY mis hermanos me hablan de Ti\n\nA D E7\nSé que a mi lado estás\n\nC#m F#m\nTe sientas junto a mí\n\nD E7 A\nAcoges mi vida y mi oración"},
+  {t:"Vino y Pan Hoy Te Ofrecemos",k:"G",momento:"Ofertorio",l:"G Em A7\nVino y pan Señor hoy te ofrecemos\n\nC Am7 D\nQue muy pronto se convertirán,\n\nG B7 Em A7\nVino y pan Señor símbolo de fe\n\nC D\nY de nuestro amor que por siempre\n\nG\nVivirán.\n\nSiempre quiero ser Señor ser tu apóstol\nSeguir yo tus pasos mi Jesús,\nFuente de verdad y de luz\nQue ilumina nuestra fe que por siempre vivirá"},
+  {t:"No Solo el Vino y el Pan",k:"D",momento:"Ofertorio",l:"D Em\nNo solo el vino y el pan\n\nA7 D\nte venimos a ofrecer\n\nD Em\nqueremos darte algo más\n\nA7 D\nte entregamos nuestro ser\n\nF# Bm\nComo lo hizo María,\n\nF# Bm - A\nque tu mensaje escuchó\n\nG D\ny dijo un Sí generoso\n\nEm A7 D\npara aceptar su misión (x2)\n\nE Em\nHoy quedan sobre este altar\n\nA7 D\nnuestras vidas, oh Señor\n\nD Em\nHaz que sepamos luchar"},
+  {t:"Esto Que Te Doy",k:"C",momento:"Ofertorio",l:"C Em F G\nEsto que te doy, es vino y pan, Señor\n\nF C G\nEsto que te doy, es mi trabajo\n\nF C Em\nEs mi corazón, mi alma\n\nA7\nEs mi cuerpo y mi razón\n\nDm G C G\nEl esfuerzo de mi caminar\n\nC Em F G\nEsto que te doy, mi vida es, Señor\n\nF C G\nEs mi amor, también, es mi dolor\n\nF C Em\nEs la ilusión, mis sueños\n\nA7\nEs mi gozo y mi llorar\n\nDm G C G\nEs mi canto y mi oración\n\nC Em F G\nToma mi vida, ponla en tu corazón\n\nC Em F G\nDame tu mano y llévame\n\nF G Em\nCambia mi pan en tu carne\n\nA7\nY mi vino en tu sangre\n\nDm G C C7\nY a mí, Señor, renuévame\n\nF G C\nLímpiame y sálvame"},
+  {t:"Hosanna (Santo, Santo, Santo)",k:"Am",momento:"Santo",l:"A7-Dm G C Am Dm E7 Am\nSanto, Santo, Santo es el Señor Dios del universo\n\nA7 Dm G C Am Dm E7 Am\nLlenos están los cielos y la tierra de su gloria hosanna\n\nA7 Dm G C Am Dm E7 Am\nHosanna hosanna hosanna en el cielo\n\nA7 Dm G C\nBendito el que viene en nombre del señor\n\nAm Dm E7 Am\nHosanna en el cielo hosanna\n\nA7 Dm G C Am Dm E7 Am\nHosanna hosanna hosanna en el cielo"},
+  {t:"Cordero de Dios I",k:"Am",momento:"Cordero de Dios",l:"Am\nCordero de Dios\n\nD F G Am\nQue quitas el pecado del mundo\n\nDm G C Am\nTen piedad de nosotros\n\nDm E Am\nTen piedad de nosotros\n\nAm\nCordero de Dios\n\nD F G Am\nQue quitas el pecado del mundo\n\nAm Dm G C\nDanos la paz, danos la paz,\n\nDm G C Am Dm E Am\nDanos, danos, danos la paz\n\nDm G C Am Dm E Am\nDanos, danos, danos la paz"},
+  {t:"Cordero de Dios II",k:"G",momento:"Cordero de Dios",l:"G Bm\nCordero de Dios\n\nC D\nQue quitas el pecado del mundo\n\nC G\nTen piedad, ten piedad,\n\nAm - D G\nTen piedad oh señor\n\nG Bm\nCordero de Dios\n\nC D\nQue quitas el pecado del mundo\n\nC G\nDanos la paz, danos la paz,\n\nAm - D G\nDanos la paz oh señor"},
+  {t:"Pan de Vida",k:"A",momento:"Comunión",l:"A C#m\nMisterio de amor oculto en un pan,\n\nF#m C#m\nCordero Inmolado, víctima y altar;\n\nD F#m\nQuedarte quisiste muy cerca de mí,\n\nBm D E\n¡Oh! gloria escondida, has venido hasta aquí.\n\nA C#m\nYa cae la noche en mi corazón;\n\nF#m C#m\nNo pases de largo, Quédate Señor.\n\nD F#m\nReconocerte quiero en la fracción del pan,\n\nBm D E\nQuita las vendas de mis ojos para poderte contemplar.\n\nA E F#m D Bm E\nEres Jesús el Pan de vida, bajado del cielo para mí.\n\nC#m F#m\nY ante tan sublime milagro de amor,\n\nBm D E\nRindo mi vida en adoración.\n\nD E A\nPan de vida."},
+  {t:"Milagro de Amor",k:"G",momento:"Comunión",l:"G D Em Em7\nJesús, aquí presente en forma real\n\nC Am F D\nTe pido un poco más de fe y de humildad\n\nG D Em Em7\nQuisiera poder ser digno de compartir\n\nC Am F D\nContigo el milagro más grande de amor\n\nG D Em\nMilagro de amor tan infinito\n\nBm C\nEn que Tu, mi Dios te has hecho\n\nAm G D\nTan pequeño y tan humilde para entrar en mi\n\nG D Em\nMilagro de amor tan infinito\n\nBm C\nEn que tu mi Dios te olvidas\n\nAm G D\nDe tu gloria y de tu majestad por mi\n\nG D Em Em7\nY hoy vengo lleno de alegrías\n\nC Am F D\nA recibirte en esta eucaristía\n\nG D Em Em7\nTe doy gracias por llamarme a esta cena\n\nC Am F D\nPorque, aunque no soy digno visitas tú mi alma\n\nG D Em\nMilagro de amor tan infinito\n\nBm C\nEn que Tu, mi Dios te has hecho\n\nAm G D\nTan pequeño y tan humilde para entrar en mi\n\nG D Em\nMilagro de amor tan infinito\n\nBm C\nEn que tu mi Dios te olvidas\n\nAm G D\nDe tu gloria y de tu majestad por mi"},
+  {t:"Ya No Eres Pan y Vino",k:"D",momento:"Comunión",l:"D G D\nYa no eres pan y vino,\n\nG D A\nahora que eres cuerpo y sangre, vives en mí\n\nG D\nde rodillas yo caigo al contemplar tu bondad,\n\nE A\ncomo no te voy a adorar\n\nD G D\nMientras te pierdes en mis labios,\n\nG D A\ntu gracia va inundando todo mi corazón\n\nG D\npor esa paz que me llena de alegría mi ser\n\nE A\ncómo no te voy a adorar\n\nD A\nSeñor Jesús, mi salvador,\n\nBm G D\namor eterno, amor divino\n\nG D A D\nya no falta nada, lo tengo todo, te tengo a tí (bis)\n\nD G D\nDueño y Rey del universo\n\nG D A\ncómo puede ser posible que busques mi amor\n\nG D\nTú tan grande y yo pequeño y te fijas en mí\n\nE A\ncómo no te voy a adorar\n\nD G D\nDe rodillas yo te pido\n\nG D A\nque el día cuando tú me llames sea como hoy\n\nG D\npara mirarte a los ojos y poderte decir\n\nE A\nque cómo no te voy a adorar"},
+  {t:"Alabemos al Santísimo",k:"D",momento:"Comunión",l:"D A D G A D D7\nAlabemos al santísimo sacramento del altar\n\nG D Em A7 D\nEn los cielos y en la tierra, aquí y en todo lugar."},
+  {t:"¿Por Qué Lloras? (Pascua)",k:"D",momento:"Comunión",l:"D\nHan pasado ya tres días\ndesde que se fue\n\nBm\nTodavía no entiendo\ncómo le ha pasado esto a él\n\nG\nAl que más amaba\nal que por amor vivía\n\nD\nSe me encoge el corazón\n\nA\nAl ver tan rota a María\n\nD\nCojo unas colonias y voy a visitarle\n\nBm\nLlamo a mis amigas para acompañarme\n\nG\nDe camino no podemos evitar\n\nA\nLágrimas que caen al recordar\n\nBm\nLlegamos al sepulcro\nla piedra han movido\n\nG\nNo entendemos nada\n\nD\nEl sepulcro está vacío\n\nBm\nQué es lo que ha pasado, acaso lo han robado\n\nG\nCuando miro dentro un ser de luz sentado\n\nA\nQue susurra a mi lado\n\nG A\nNo entiendo mujer, por qué lloras\n\nD D7\nPor qué buscáis entre los muertos\n\nG A\nÉl no está aquí, ha resucitado\n\nD\nRecordad cuando os dijo\n\nD7\nQue debía ser entregado\n\nG A\nPor nuestros pecados, ser crucificado\n\nD A\nPero que al tercer día volvería\n\nD\nPaz en mis entrañas\namor inexplicable\n\nBm\nSólo quiero gritarlo\nDios existe, Dios es grande\n\nG\nLágrimas ahora de felicidad\n\nA\nNos han regalado la eternidad\n\nG A\nNo entiendo mujer, por qué lloras\n\nD D7\npor qué buscáis entre los muertos"},
+  {t:"María Mírame",k:"A",momento:"Salida",l:"A E F#m - D\nMaría mírame, María mírame\n\nA D E\nSi tú me miras él también me mirará\n\nF#m - D A D\nMadre mía mírame de la mano llévame\n\nA E A\nMuy cerca de él que ahí me quiero quedar\n\nF#m E F#m\nMaría cúbreme con tu manto\n\nD E A A7\nQue tengo miedo y no sé rezar\n\nD E A\nQue por tus ojos misericordiosos\n\nF#m D E A\nTendré la fuerza tendré la paz\n\nA E F#m - D\nMaría mírame, María mírame\n\nA D E\nSi tú me miras él también me mirará\n\nF#m - D A D\nMadre mía mírame de la mano llévame\n\nA E A\nMuy cerca de él que ahí me quiero quedar"},
+  {t:"Contigo, María",k:"D",momento:"Salida",l:"D G\nQuiero caminar contigo María\n\nD G\nPues tu eres mi Madre eres mi guía\n\nA G\nTu eres para mí el más grande ejemplo\n\nD A\nde santidad, de humildad.\n\nD G D - A\nGuía mis pasos Llévame al cielo\n\nBm G A\nBajo tu manto No tengo miedo\n\nD G D - A\nLlena de gracia Ave María\n\nBm A D\nHoy yo te ofrezco toda mi vida\n\nD G\nQuiero caminar contigo María\n\nD G\nNo solo un momento, todos los días\n\nA G\nNecesito tu amor de Madre\n\nD A\nTu intercesión ante el Señor\n\nD G D - A\nGuía mis pasos Llévame al cielo\n\nBm G A\nBajo tu manto No tengo miedo\n\nD G D - A\nLlena de gracia Ave María\n\nBm A D\nHoy yo te ofrezco toda mi vida"},
+  {t:"Junto a Ti María",k:"D",momento:"Salida",l:"D A\nJunto a ti María,\n\nBm F#m\nComo niño quiero estar,\n\nG D\nTómame en tus manos,\n\nE A\nGuíame en mi caminar.\n\nD A\nQuiero que me eduques,\n\nBm F#m\nQue me enseñes a orar,\n\nG D\nHazme transparente,\n\nA D\nLléname de paz.\n\nD A Bm F#m\nMadre, Madre,\n\nG D E A\nMadre, Madre.\n\nD A Bm F#m\nMadre, Madre,\n\nG D E/A D\nMadre, Madre.\n\nGracias Madre mía,\npor llevarnos a Jesús,\nHaznos más humildes,\ntan sencillos como tú.\n\nGracias Madre mía,\npor abrir tu corazón,\nporque nos congregas\ny nos das tu amor."},
+  {t:"Es María la Blanca Paloma",k:"D",momento:"Salida",l:"D A7 D\nEs María la blanca paloma (2)\n\nD7 G\nque ha venido a América\n\nA7 D\nque ha venido a América\n\nEm7 Em\nque ha venido a América\n\nA7 D\na traer la paz\n\nD A7 D\nPastorcitos humildes de Fátima,\n\nD7 G\nse vieron muy tristes\n\nA7 D\nse vieron muy tristes\n\nEm7 Em\nse vieron muy tristes\n\nA7 D\npor nuestra maldad.\n\nD A7 D\nLes mandaste a rezar el Rosario,\n\nD7 G\npor los pecadores,\n\nA7 D\npor los pecadores,\n\nEm7 Em\npor los pecadores,\n\nA7 D\npara que haya paz."}
+];
+
 const MOMENTOS=["Entrada","Señor ten piedad","Gloria","Aleluya","Ofertorio","Santo","Cordero de Dios","Comunión","Salida"];
-let sel=[],masig={},pMom='',_litInfo=null;
+const MOM_ORDINARIO=["Señor ten piedad","Gloria","Santo","Cordero de Dios"];
+let sel=[],masig={},pMom='',_litInfo=null,MISA_BANK=[];
 MOMENTOS.forEach(m=>masig[m]=null);
 
 function calcEaster(y){
@@ -362,8 +395,10 @@ function getLitInfo(date){
   const solemnity=checkSolemnity(date,easter);
   const dow=date.getDay();
   let gloria,gloriaReason;
-  if(solemnity&&season!=='Cuaresma'&&season!=='Semana Santa'){
-    gloria=true;gloriaReason=`Sí — solemnidad: ${solemnity}.`;
+  if(solemnity==='Domingo de Ramos'){
+    gloria=false;gloriaReason='No se canta el Domingo de Ramos (inicia la Semana Santa).';
+  } else if(solemnity){
+    gloria=true;gloriaReason=`Sí — solemnidad: ${solemnity}${(season==='Cuaresma'||season==='Adviento')?' (las solemnidades llevan Gloria aunque caigan en '+season+')':''}.`;
   } else if(season==='Cuaresma'||season==='Semana Santa'){
     gloria=false;gloriaReason='No se canta en Cuaresma ni Semana Santa.';
   } else if(season==='Adviento'){
@@ -551,7 +586,7 @@ function buildMisaSheet(){
     document.getElementById('misasheet').innerHTML='<p style="color:var(--text3);font-size:13px;padding:1rem 0;text-align:center">Aún no hay cantos asignados</p>';
     return;
   }
-  const songs=assigned.map(m=>({...S[masig[m]],momento:m}));
+  const songs=assigned.map(m=>({...MISA_BANK[masig[m]],momento:m}));
   const titulo='ESQUEMA DE MISA — JDTC';
   _currentTxt=buildTxt(songs,titulo);
   document.getElementById('misasheet').innerHTML=`<div class="sheet-wrap">
@@ -582,7 +617,7 @@ function doCopy(titulo){
 
 function renderM(){
   document.getElementById('mgrid').innerHTML=MOMENTOS.map(m=>{
-    const si=masig[m],s=si!==null?S[si]:null;
+    const si=masig[m],s=si!==null?MISA_BANK[si]:null;
     const gloriaOff=m==='Gloria'&&_litInfo&&!_litInfo.gloria;
     const alleluiaOff=m==='Aleluya'&&_litInfo&&!_litInfo.alleluia;
     const dimmed=gloriaOff||alleluiaOff;
@@ -600,8 +635,10 @@ function opP(m){
   pMom=m;
   const pk=document.getElementById('mpicker');
   pk.style.display='block';
+  const isOrdinario=MOM_ORDINARIO.includes(m);
   pk.innerHTML=`<div class="picker-overlay">
     <p style="font-size:11px;color:var(--text3);margin-bottom:.5rem;letter-spacing:.05em;text-transform:uppercase">Asignar a: ${m}</p>
+    ${isOrdinario?'<p style="font-size:11px;color:var(--text3);margin-bottom:.5rem;font-style:italic">Texto fijo del Ordinario de la Misa — solo se muestran las melodías catalogadas para este momento.</p>':''}
     <div class="search-wrap" style="margin-bottom:.5rem">
       <span class="search-icon">🔍</span>
       <input type="text" id="psearch" placeholder="Buscar canto..." oninput="renderPL()">
@@ -616,8 +653,12 @@ function clsP(){document.getElementById('mpicker').style.display='none';}
 
 function renderPL(){
   const q=(document.getElementById('psearch').value||'').toLowerCase();
-  document.getElementById('plist').innerHTML=S.filter(s=>s.t.toLowerCase().includes(q)).map(s=>{
-    const i=S.indexOf(s);
+  const isOrdinario=MOM_ORDINARIO.includes(pMom);
+  const bank=isOrdinario
+    ? MISA_BANK.filter(s=>s.momento===pMom)
+    : MISA_BANK.filter(s=>!s.momento||s.momento===pMom);
+  document.getElementById('plist').innerHTML=bank.filter(s=>s.t.toLowerCase().includes(q)).map(s=>{
+    const i=MISA_BANK.indexOf(s);
     return `<div class="pitem" onclick="asgn(${i})"><span>${s.t}</span><span class="pitem-key">${s.k}</span></div>`;
   }).join('');
 }
